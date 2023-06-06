@@ -46,7 +46,9 @@ The scripts write columns `keyword` and `person` into the table. For the keyword
 
 ## API utilization and request slowdown
 
-Requests to the API are subject to the rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: https://developers.facebook.com/docs/graph-api/overview/rate-limiting/
+Requests to the API are subject to rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: https://developers.facebook.com/docs/graph-api/overview/rate-limiting/
+
+Below is an example of the utilization record. This record is included into the header of the request returned by the server. The name of the header field is `X-Business-Use-Case-Usage`. The BUC number of the app has been replaced with `xxxx`.
 
 ```
 {"xxxx":
@@ -57,6 +59,34 @@ Requests to the API are subject to the rate limits. The app owned by the Wesleya
   "estimated_time_to_regain_access":0}]}
 ```
 
+If a user reaches 100 percent in any of the categories - call count, total cpu time, or total time, - then the access is suspended for as long as 24 hours.
 
+To avoid such situations, our scripts introduce a delay between requests. The delay increases as the utilizaation percentage goes up. When utilization is under 75%, the delay is 3 seconds. When it reaches 95% or higher, the delay is 90 seconds - 1.5 minutes.
 
+```
+## function determining the delay between requests
+## depending on the API usage metrics
+## takes one argument - maximum value among three metrics
+get_delay_value = function(m_usage) {
+  d = dplyr::case_when(m_usage > 95 ~ 90,
+                       m_usage > 90 ~ 30,
+                       m_usage > 80 ~ 10,
+                       m_usage > 75 ~ 5,
+                       m_usage > 50 ~ 3,
+                       TRUE ~ 3)
+  return(d)
+} ## end of function get_delay_value
+```
+
+When the API returns records, it does so in pages. At the end of each page there is a `next` field that contains the URL of the next page of records. Submitting a request to this URL counts against the rate limits. Thus, it is entirely possible to submit only a single request and then run out of usage quotas.
+
+## Exclusion of duplicate records
+
+Most of the fields in the ad record are permanent and do not change between requests: page id, funding byline, ad creative text, ad links, ad delivery start time, and so on. There are also several fields that get updated and reflect the performance of an ad: the `spend` and `impressions` fields reprot the range of the spend and impressions, respectively. The demographic distribution and regional distribution fields report the percentages of ad views across groupins of users by demographic characteristic (age, sex) or their state of residence.
+
+To save disk space in the database, the scripts will insert an ad record only if the ad is entirely new or the if the ad is already in the database but its record has changed. That means that any of the non-permanent fields - spend, impressions, distributions - have changed.
+
+In order to compare the records, the scripts generate a hash string for each row in the `race2022` table and store it in the database. During the import, the scripts retrieve the hash strings of "old" records and compare the strings aginst the hashes of the "fresh" records that just arrived from the API. If the hash strings match, the scripts "skip" the record and do not insert it into the database.
+
+Usually, hash libraries would generate a string for a single object: a number or a text string. However, R is unique in that it has a package `digest` that can generate hash values from a whole object, be it a vector, a list, or a row of a dataframe. The scripts rely on this package.
 
