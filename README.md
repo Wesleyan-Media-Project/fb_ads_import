@@ -39,7 +39,7 @@ Our database (its name is `textsim_new`) contains a table with the names of poli
 
 The `race2022.R` script retrieves the contents of the `senate2022` table and then submits a separate request for each keyword. It then identifies which ad records are new and inserts them into the table `race2022` in the database.
 
-As a next step, the `backpull2022.R` script constructs a list of strings containing at most 10 page ids each. It then iterates through this list and submits the queries to the page_id endpoint of the API. The new ad records are inserted into the same database.
+As a next step, the `backpull2022.R` script constructs a list page ids from the ads imported into `race2022`. It splits the list into strings containing at most 10 page ids each - the upper limit on the number of page ids that can be submitted to the Ad API. It then iterates through these strings and submits the queries to the page_id endpoint of the API. The new ad records are inserted into the same database. This way WMP collects the ads containing keywords and all other ads that were posted by the same pages. This is done to make sure we do not miss any advertising activity.
 
 The scripts write columns `keyword` and `person` into the table. For the keyword-search script, these columns contain the actual keywrod and person linked to the keyword. For the backpull script, these columns contain the list of page ids. The page ids are entirely numerical and this allows us to identify, post hoc, why each of the ad records was imported into our system.
 
