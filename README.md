@@ -106,7 +106,7 @@ This functionality was put in place because in 2020 there often would be a situa
 
 The `backpull2022.R` script is designed to operate only a few hours a day. It is impossible to perform the "back-pull" for all pages in the list, and the script uses a table (its name is `page_queue`) where it records the last time specific collection of page-ids was queried. At launch time, the script retrieves the list sorted in chronological order, with oldest timestamps coming first. 
 
-Both scripts are launched daily. We leave several idle hours to "cool off" the utilization metrics. The keyword-search script is launched at 8 am and runss first, until completion. Then, the backpull script is launched afterwards and runs until 3 am. The period between 3 am and 8 am is the "quiet time". We do know from experience that it is counter-productive to have the two scripts run in parallel because they consume the same rate limits.
+Both scripts are launched daily. We leave several idle hours to "cool off" the utilization metrics. The keyword-search script is launched at 8 am and runs first, until completion. Then, the backpull script is launched afterwards and runs until 3 am. The period between 3 am and 8 am is the "quiet time". We do know from experience that it is counter-productive to have the two scripts run in parallel because they consume the same rate limits.
 
 We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
 
