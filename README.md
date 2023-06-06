@@ -82,7 +82,7 @@ When the API returns records, it does so in pages. At the end of each page there
 
 ## Exclusion of duplicate records
 
-Most of the fields in the ad record are permanent and do not change between requests: page id, funding byline, ad creative text, ad links, ad delivery start time, and so on. There are also several fields that get updated and reflect the performance of an ad: the `spend` and `impressions` fields reprot the range of the spend and impressions, respectively. The demographic distribution and regional distribution fields report the percentages of ad views across groupins of users by demographic characteristic (age, sex) or their state of residence.
+Most of the fields in an ad record get their values at the time the ad is created and do not change between API requests: page id, funding byline, ad creative text, ad links, ad delivery start time, and so on. There are also several fields that get updated and reflect the performance of an ad: the `spend` and `impressions` fields reprot the ranges of the spend and impressions, respectively. The demographic distribution and regional distribution fields report the percentages of ad views across groupings of users by demographic characteristic (age, sex) or their state of residence.
 
 To save disk space in the database, the scripts will insert an ad record only if the ad is entirely new or the if the ad is already in the database but its record has changed. That means that any of the non-permanent fields - spend, impressions, distributions - have changed.
 
@@ -90,3 +90,14 @@ In order to compare the records, the scripts generate a hash string for each row
 
 Usually, hash libraries would generate a string for a single object: a number or a text string. However, R is unique in that it has a package `digest` that can generate hash values from a whole object, be it a vector, a list, or a row of a dataframe. The scripts rely on this package.
 
+## Retries on API errors
+
+Occasionally, the API will return an error. The error can be caused by problems with authentication (e.g., the access token has expired) or usage limits (e.g., despite the slowdown, the script has hit the 100% utilization and has been cut off). It can also mean that the amount of data served in a single page of results is too large and the server issues code 500 error.
+
+When the error occurs, the script tries to repeat the request: it waits 30 seconds and then resubmits the request. If, after seven attempts, the error did not go away, the script terminates.
+
+Termination is important because, if the error was caused by exceeding the usage limits, hitting the endpoint with more requests will aggravate the situation and will prolong the "cool off" period when the API will block requests from our access token.
+
+## Management of the queue of requests
+
+The two scripts - `race2022.R` and `backpull2022.R` - operate under different assumptions regarding the 
