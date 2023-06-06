@@ -8,7 +8,7 @@ If you are looking for a way to import a small collection of ads from the Facebo
 
 It is written in R and does not require any databases. For a vignette, please see this [page](https://facebookresearch.github.io/Radlibrary/articles/Radlibrary.html)
 
-As far as we know, the biggest functional distinction between our scripts and the official package is the handling of the API utilization information to make sure that the scripts do not exceed the limits set by the API. Without this feature, the scripts are bound to hit the usage limits when the amount of imported data is large. When that happens, access to the API is revoked for several hours.
+As far as we know, the biggest functional difference between our scripts and the official package is the handling of the API utilization information to make sure that the scripts do not exceed the limits set by the API. Without this feature, the scripts are bound to hit the usage limits when the amount of imported data is large. When that happens, access to the API is revoked for several hours.
 
 Our scripts also implement an additional feature related to data management: exclusion of duplicate records at the time when the data is inserted into the database. This is done to save disk space.
 
