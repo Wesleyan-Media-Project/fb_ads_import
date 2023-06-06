@@ -59,7 +59,7 @@ Below is an example of the utilization record. This record is included into the 
   "estimated_time_to_regain_access":0}]}
 ```
 
-If a user reaches 100 percent in any of the categories - call count, total cpu time, or total time, - then the access is suspended for as long as 24 hours.
+If a user reaches 100 percent in any of the categories - call count, total cpu time, or total time, - then their access is suspended for as long as 24 hours.
 
 To avoid such situations, our scripts introduce a delay between requests. The delay increases as the utilizaation percentage goes up. When utilization is under 75%, the delay is 3 seconds. When it reaches 95% or higher, the delay is 90 seconds - 1.5 minutes.
 
