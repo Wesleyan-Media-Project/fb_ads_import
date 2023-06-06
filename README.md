@@ -100,4 +100,13 @@ Termination is important because, if the error was caused by exceeding the usage
 
 ## Management of the queue of requests
 
-The two scripts - `race2022.R` and `backpull2022.R` - operate under different assumptions regarding the 
+The two scripts - `race2022.R` and `backpull2022.R` - operate under different assumptions regarding the data input. The keyword-search script `race2022.R` imports a list of keywords and goes through it "in a single sitting". The script does have the capability to start from a user-specified row in the list. To do so, the user needs to provide `--args resume=N` string in the command line invoking the script, where `N` is the row number.
+
+This functionality was put in place because in 2020 there often would be a situation that the script would "choke" on a particular keyword. This would happen because the amount of data returned by the API would cause errors (e.g., the code 500) errors. There were also situations where a script would go into an infinite loop - the server would lose track the pages of data and would serve the same URL in the `next` field over and over. (Both problems occurred when searching for ads that would have keyword `Trump` in them.) Because we know the ordering of the keywords, the `resume=N` option allowed us to skip the problematic request and instead continue with the keywords immediately after. This way we could salvage the remaining hours in a day by collecting some data and hoping that the problems with the difficult keyword will go away (as they eventually did).
+
+The `backpull2022.R` script is designed to operate only a few hours a day. It is impossible to perform the "back-pull" for all pages in the list, and the script uses a table (its name is `page_queue`) where it records the last time specific collection of page-ids was queried. At launch time, the script retrieves the list sorted in chronological order, with oldest timestamps coming first. 
+
+Both scripts are launched daily. We leave several idle hours to "cool off" the utilization metrics. The keyword-search script is launched at 8 am and runss first, until completion. Then, the backpull script is launched afterwards and runs until 3 am. The period between 3 am and 8 am is the "quiet time". We do know from experience that it is counter-productive to have the two scripts run in parallel because they consume the same rate limits.
+
+We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
+
