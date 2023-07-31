@@ -15,10 +15,10 @@ DB_CONN = "" ## database connector
 
 QUERY_HASH = data.frame() ## table with hash values for ads
 
-INGESTED_FIELDS = c("id,ad_creation_time,ad_creative_bodies,ad_creative_body",
-                    "ad_creative_link_caption,ad_creative_link_captions",
-                    "ad_creative_link_description,ad_creative_link_descriptions",
-                    "ad_creative_link_titles,ad_creative_link_title",
+INGESTED_FIELDS = c("id,ad_creation_time,ad_creative_bodies",
+                    "ad_creative_link_captions",
+                    "ad_creative_link_descriptions",
+                    "ad_creative_link_titles",
                     "ad_delivery_start_time,ad_delivery_stop_time",
                     "ad_snapshot_url,bylines,currency",
                     "delivery_by_region,demographic_distribution",
@@ -80,7 +80,7 @@ query_url = param_set(endpoint_url, key="limit", value="200") %>%
 ## open a connection to the MySQL server
 DB_CONNECTOR = dbConnect(RMySQL::MySQL(), host="localhost",
                  user="xxxx", password="xxxx",
-                 dbname="textsim_new")
+                 dbname="dbase1")
 
 
 
