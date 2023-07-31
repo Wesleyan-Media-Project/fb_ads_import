@@ -112,7 +112,7 @@ Both scripts are launched daily. We leave several idle hours to "cool off" the u
 
 We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
 
-#Setup
+# Setup
 
 In order to run the scripts, you will need to create the tables in your instances of MySQL/MariaDB and enter some keyword values. In addition, you MUST have the access token from the [Facebook Graph API Explorer tool](https://developers.facebook.com/tools/explorer). Without the token, the code will not work - you will receive API errors. The token must be saved in a file named `tokens.txt` and it must be in the working directory used by the script.
 
