@@ -12,6 +12,8 @@ As far as we know, the biggest functional difference between our scripts and the
 
 Our scripts also implement an additional feature related to data management: exclusion of duplicate records at the time when the data is inserted into the database. This is done to save disk space.
 
+If you are not interested in the background covering the authorization and the data, please procede to the [Setup](#Setup) section at the end of this document.
+
 ## Access authorization
 
 The API requires that each query must include an access token. This token is obtained from the Facebook Graph API Explorer page [https://developers.facebook.com/tools/explorer/](https://developers.facebook.com/tools/explorer/). Initially, tokens are valid for 60 minutes, but they can be extended using a Token Debugger. An extended-life token can be used for 60 days.
@@ -110,3 +112,58 @@ Both scripts are launched daily. We leave several idle hours to "cool off" the u
 
 We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
 
+#Setup
+
+In order to run the scripts, you will need to create the tables in your instances of MySQL/MariaDB and enter some keyword values. In addition, you MUST have the access token from the [Facebook Graph API Explorer tool](https://developers.facebook.com/tools/explorer). Without the token, the code will not work - you will receive API errors. The token must be saved in a file named `tokens.txt` and it must be in the working directory used by the script.
+
+## R packages
+
+The scripts are written in R. Make sure that you have the following packages installed in the R instance you are using:
+* dplyr
+* httr
+* jsonlite
+* RMySQL
+* tidyr
+* readr
+* base64enc
+* digest
+* urltools
+
+You can install them with a single command in R:
+
+```{R}
+install.packages(c("dplyr", "httr", "jsonlite", "RMySQL", "tidyr", "readr", "base64enc", "digest", "urltools"))
+```
+
+Depending on what machine and operating system you are using, package `RMySQL` may require installation of system level utilities or libraries. Make sure to read the diagnostic messages, as they will contain additional instructions.
+
+## SQL backend
+The required commands for the MySQL/MariaDB backend are provided in the file `table_setup.sql` in this repo. Several points are worth special attention:
+
+* the script expects to have a database named `dbase1`. You can change this to your liking, but if you do, please also update the R scripts - they use this database name to connect to the database server.
+* column names in table `race2022` reflect the ad record fields as they are available in the API version 17.0 (the documentation is [here](https://developers.facebook.com/docs/graph-api/reference/archived-ad/)). This is the latest API version at the time this repo is prepared and our hope is that this version will remain valid for several years. The scripts have a variable that contains the column names. These must match the names of columns in the tables and in the API.
+
+This statement in the script inserts the phrases that will be used to search the ads via keywords. Essentially, they represent the "seed" records:
+
+```{sql}
+INSERT INTO senate2022
+(name, state, party, term, in_the_race)
+VALUES
+("Fetterman, John", "PA", "DEM", "Fetterman Senate", "yes"),
+("Fetterman, John", "PA", "DEM", "John Fetterman", "yes"),
+("Vance, J.D.", "OH", "GOP", "Vance Senate", "yes"),
+("Vance, J.D.", "OH", "GOP", "JD Vance", "yes");
+```
+
+As you can see, the keywords are related to John Fetterman and JD Vance. In a real application, this is the part of the script that you would modify to suit your needs. When a candidate drops out of a race, we would update the `in_the_race` column so it would no longer contain "yes". That way, we can keep track of all keywords and search terms, but don't have to spend the FB API requests on candidates who are no longer active.
+
+## Running the scripts
+
+We use command-line method of running R. The following code block illustrates how to run the scripts as background processes in a Linux-like operating system. The `nohup` command instructs the operating system that the process should not be terminated ("no hung up - nohup") when the user terminal is closed. The ampersand `&` at the emdn of the line instructs the operating system to run the process in the background. 
+
+The `R CMD BATCH` is the actual command that runs R in command-line mode. The ` ./Logs/backpull_log_$(date +%Y-%m-%d).txt ` string will be evaluated by the operating system and will generate a filename containing the date in it. The `$(date +%Y-%m-%d)` will insert the current date in the format `YYYY-mm-dd`. Thus, the log file will have a date in its name and will not overwrite log files from previous days.
+
+```{bash}
+nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
+nohup R CMD BATCH --no-save --no-restore '--args resume=1' race2022.R  ./Logs/race_log_$(date +%Y-%m-%d).txt &
+```
