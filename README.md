@@ -114,7 +114,8 @@ We have included the bash file `race_2022.sh` that is launched via crontab to ru
 
 # Setup
 
-In order to run the scripts, you will need to create the tables in your instances of MySQL/MariaDB and enter some keyword values. In addition, you MUST have the access token from the [Facebook Graph API Explorer tool](https://developers.facebook.com/tools/explorer). Without the token, the code will not work - you will receive API errors. The token must be saved in a file named `tokens.txt` and it must be in the working directory used by the script.
+## Access Token
+In addition, you MUST have the access token from the [Facebook Graph API Explorer tool](https://developers.facebook.com/tools/explorer). Without the token, the code will not work - you will receive API errors. The token must be saved in a file named `tokens.txt` and it must be in the working directory used by the script.
 
 ## R packages
 
@@ -138,10 +139,13 @@ install.packages(c("dplyr", "httr", "jsonlite", "RMySQL", "tidyr", "readr", "bas
 Depending on what machine and operating system you are using, package `RMySQL` may require installation of system level utilities or libraries. Make sure to read the diagnostic messages, as they will contain additional instructions.
 
 ## SQL backend
+
+The scripts will store data in an instance of MySQL (or MariaDB) that needs to be installed and running on your machine. In order to run the scripts, you will need to create the tables in a database in MySQL/MariaDB and enter some keyword values. 
+
 The required commands for the MySQL/MariaDB backend are provided in the file `table_setup.sql` in this repo. Several points are worth special attention:
 
 * the script expects to have a database named `dbase1`. You can change this to your liking, but if you do, please also update the R scripts - they use this database name to connect to the database server.
-* column names in table `race2022` reflect the ad record fields as they are available in the API version 17.0 (the documentation is [here](https://developers.facebook.com/docs/graph-api/reference/archived-ad/)). This is the latest API version at the time this repo is prepared and our hope is that this version will remain valid for several years. The scripts have a variable that contains the column names. These must match the names of columns in the tables and in the API.
+* column names in table `race2022` reflect the ad record fields as they are available in the API version 17.0 (the documentation is [here](https://developers.facebook.com/docs/graph-api/reference/archived-ad/)). This is the latest API version at the time this repo is prepared and our hope is that this version will remain valid for several years. The scripts have a variable `INGESTED_FIELDS` that contains the column names. These must match the names of columns in the tables and in the API.
 
 This statement in the script inserts the phrases that will be used to search the ads via keywords. Essentially, they represent the "seed" records:
 
