@@ -59,14 +59,8 @@ if (length(args) == 1) {
 a = readLines("tokens.txt")
 a_token = a
 
-# a_token = c("EAADdgbOPVbgBACH96l2C2t2UXCzT1ICtImFx01mS4nDTxQOdWZClr2ZBHW9wK9MzGfhMXfdkcpiLJZBQV2oLXYY1mUnBsE11elhY0UvjZAz6sUJHkWk51KbggIZAaKMlNzfvCDCmctUdhZADQqG3WKJddOqyPkPWEZD",
-#             "EAADdgbOPVbgBABAWd4SlaB2gwy4rU1FXrdjVQnO5ZAi4JdnG1NZBFdRN3TDJCNN87sIJbVQQ9yqgCAXIrM5UzeS5zB3tfZBUc0GCyvUBZAUJFmCewokg0pFtY4vhNRucFac6yOagEdwmXhAe9sTWZAfkI4NXHbPOUOMeRn8ADiYUPd3CeZCmlC5rZC7WjmF7FV7cG3AhpRo0ZC9QwiCyoL0OTi5xUZCqxvuQZD",
-#             "EAADdgbOPVbgBAFSIzYcnk0cbuZBXp5m2EupaLdNo8ZBD1zfrXlAVPvxBkrZBStdXkouUhWfqYs8fisOR97LdW3ZA0fXdZA1jdpYplLNhVPmoMj51XshrakZBKq2ZASI21bwrzfWratZC6ezY5KGBzIF15g9P84qe14oZD",
-#             "EAADdgbOPVbgBAInZCfKtANsT3NP1ZCG3qsvdumV2DEe00uGqT2PRcCNdwUJiG30avC1A3j96fYZB0UdxnmRluc3k2cXZAZCZANpEmrRnPiXcV7qqbRXZA6sIcbaDRAZAUj0JNTH5wSn41Umo9eYNq8ZA6b52tsw1xSO5d4CtWnnZBVWwZDZD")
-
-
 ## this is the endpoint for the ads_archive API
-endpoint_url = 'https://graph.facebook.com/v12.0/ads_archive'
+endpoint_url = 'https://graph.facebook.com/v17.0/ads_archive'
 
 ## parameters
 ## essentially, all fields that the API returns
