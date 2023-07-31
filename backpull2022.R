@@ -3,7 +3,7 @@
 ## nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
 
 ## Global variables
-ADS_TABLE = "race2022_utf8"  ## table for storing ads
+ADS_TABLE = "race2022"  ## table for storing ads
 ADS_LOG = "race2022_ads_log"
 PAGE_ID_LOG = "page_id_log"
 
