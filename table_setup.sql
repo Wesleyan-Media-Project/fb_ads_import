@@ -20,18 +20,15 @@ create table page_queue
 
 
 -- create the table that will hold the ad records
+-- these are the fields supported by FB Ad Library API v.17.0
 create table race2022 
 (
   id TEXT,
   ad_creation_time TEXT, 
   ad_creative_bodies TEXT, 
-  ad_creative_body TEXT, 
-  ad_creative_link_caption TEXT, 
   ad_creative_link_captions TEXT, 
-  ad_creative_link_description TEXT, 
   ad_creative_link_descriptions TEXT,
   ad_creative_link_titles TEXT, 
-  ad_creative_link_title TEXT, 
   ad_delivery_start_time TEXT, 
   ad_delivery_stop_time TEXT, 
   ad_snapshot_url TEXT, 
@@ -39,12 +36,10 @@ create table race2022
   currency TEXT, 
   delivery_by_region TEXT, 
   demographic_distribution TEXT, 
-  funding_entity TEXT, 
   impressions TEXT, 
   languages TEXT, 
   page_id TEXT, 
   page_name TEXT, 
-  potential_reach TEXT, 
   publisher_platforms TEXT, 
   spend TEXT, 
   query TEXT, 
