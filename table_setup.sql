@@ -1,3 +1,4 @@
+-- see https://dev.mysql.com/doc/refman/8.0/en/database-use.html for more on the process
 -- select the database; note that your name may be different
 use dbase1;
 
