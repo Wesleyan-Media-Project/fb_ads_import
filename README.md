@@ -136,7 +136,7 @@ You can install them with a single command in R:
 install.packages(c("dplyr", "httr", "jsonlite", "RMySQL", "tidyr", "readr", "base64enc", "digest", "urltools"))
 ```
 
-Depending on what machine and operating system you are using, package `RMySQL` may require installation of system level utilities or libraries. Make sure to read the diagnostic messages, as they will contain additional instructions.
+Depending on what machine and operating system you are using, package `RMySQL` may require installation of system level utilities or libraries. Make sure to read the diagnostic messages, as they will contain additional instructions. This process will take a minute. When using the given command line in R, you will be prompted with this question: Would you like to use a personal library instead? (yes/No/cancel). Enter yes.
 
 ## SQL backend 
 
