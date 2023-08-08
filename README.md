@@ -138,7 +138,7 @@ install.packages(c("dplyr", "httr", "jsonlite", "RMySQL", "tidyr", "readr", "bas
 
 Depending on what machine and operating system you are using, package `RMySQL` may require installation of system level utilities or libraries. Make sure to read the diagnostic messages, as they will contain additional instructions.
 
-## SQL backend
+## SQL backend 
 
 The scripts will store data in an instance of MySQL (or MariaDB) that needs to be installed and running on your machine. In order to run the scripts, you will need to create the tables in a database in MySQL/MariaDB and enter some keyword values. 
 
@@ -161,13 +161,17 @@ VALUES
 
 As you can see, the keywords are related to John Fetterman and JD Vance. In a real application, this is the part of the script that you would modify to suit your needs. When a candidate drops out of a race, we would update the `in_the_race` column so it would no longer contain "yes". That way, we can keep track of all keywords and search terms, but don't have to spend the FB API requests on candidates who are no longer active.
 
+Check out `table_setup.sql` to learn more about how to setup tables and use databases.
+
 ## Running the scripts
 
 We use command-line method of running R. The following code block illustrates how to run the scripts as background processes in a Linux-like operating system. The `nohup` command instructs the operating system that the process should not be terminated ("no hung up - nohup") when the user terminal is closed. The ampersand `&` at the emdn of the line instructs the operating system to run the process in the background. 
 
-The `R CMD BATCH` is the actual command that runs R in command-line mode. The ` ./Logs/backpull_log_$(date +%Y-%m-%d).txt ` string will be evaluated by the operating system and will generate a filename containing the date in it. The `$(date +%Y-%m-%d)` will insert the current date in the format `YYYY-mm-dd`. Thus, the log file will have a date in its name and will not overwrite log files from previous days.
+The `R CMD BATCH` is the actual command that runs R in command-line mode. The ` ./Logs/backpull_log_$(date +%Y-%m-%d).txt ` string will be evaluated by the operating system and will generate a filename containing the date in it. The `$(date +%Y-%m-%d)` will insert the current date in the format `YYYY-mm-dd`. Thus, the log file will have a date in its name and will not overwrite log files from previous days. These command lines can be found in `race_2022.sh`, as well.
 
 ```{bash}
 nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
+```
+```{bash}
 nohup R CMD BATCH --no-save --no-restore '--args resume=1' race2022.R  ./Logs/race_log_$(date +%Y-%m-%d).txt &
 ```
