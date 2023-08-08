@@ -170,8 +170,9 @@ We use command-line method of running R. The following code block illustrates ho
 The `R CMD BATCH` is the actual command that runs R in command-line mode. The ` ./Logs/backpull_log_$(date +%Y-%m-%d).txt ` string will be evaluated by the operating system and will generate a filename containing the date in it. The `$(date +%Y-%m-%d)` will insert the current date in the format `YYYY-mm-dd`. Thus, the log file will have a date in its name and will not overwrite log files from previous days. These command lines can be found in `race_2022.sh`, as well.
 
 ```{bash}
-nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
-```
-```{bash}
 nohup R CMD BATCH --no-save --no-restore '--args resume=1' race2022.R  ./Logs/race_log_$(date +%Y-%m-%d).txt &
 ```
+```{bash}
+nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
+```
+
