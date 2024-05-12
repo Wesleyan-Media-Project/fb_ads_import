@@ -1,14 +1,17 @@
 # Wesleyan Media Project - fb_ad_import
 
-Welcome! This repo is a part of the Cross-platform Election Advertising Transparency initiatIVE ([CREATIVE](https://www.creativewmp.com/)) project. CREATIVE is a joint infrastructure project of WMP and privacy-tech-lab at Wesleyan University. CREATIVE provides cross-platform integration and standardization of political ads collected from Google and Facebook.
+Welcome! The purpose of this repository is to provide the scripts that replicate the workflow used by the Wesleyan Media Project to import Facebook political ads.
+The scripts provided here are intended to help journalists, academic researchers, and others interested in the democratic process to understand how to import a large collection of Facebook political ads.
 
-This repo is a part of the Data Collection step.
+This repo is a part of the [Cross-platform Election Advertising Transparency Initiative (CREATIVE)](https://www.creativewmp.com/). CREATIVE has the goal of providing the public with analysis tools for more transparency of political ads across online platforms. In particular, CREATIVE provides cross-platform integration and standardization of political ads collected from Google and Facebook. CREATIVE is a joint project of the [Wesleyan Media Project (WMP)](https://mediaproject.wesleyan.edu/) and the [privacy-tech-lab](https://privacytechlab.org/) at [Wesleyan University](https://www.wesleyan.edu).
+
+To analyze the different dimensions of political ad transparency we have developed an analysis pipeline. The scripts in this repo are part of the Data Collection Step in our pipeline.
 
 ![A picture of the repo pipeline with this repo highlighted](Creative_Pipelines.png)
 
 ## Table of Contents
 
-- [Introduction](#introduction)
+- [1. Introduction](#1-introduction)
 
   - [A word of caution](#a-word-of-caution)
   - [Access authorization](#access-authorization)
@@ -18,19 +21,21 @@ This repo is a part of the Data Collection step.
   - [Retries on API errors](#retries-on-api-errors)
   - [Management of the queue of requests](#management-of-the-queue-of-requests)
 
-- [Objective](#objective)
+- [2. Objective](#2-objective)
 
-- [Data](#data)
+- [3. Data](#3-data)
 
   - [What can you do with this data?](#what-can-you-do-with-this-data)
 
-- [Setup](#setup)
+- [4. Setup](#4-setup)
   - [Access Token](#access-token)
   - [R packages](#r-packages)
   - [SQL backend](#sql-backend)
   - [Running the scripts](#running-the-scripts)
 
-## Introduction
+- [5. Thank You](#5-thank-you)
+
+## 1. Introduction
 
 The purpose of this repository is to provide the scripts that replicate the workflow used by the Wesleyan Media Project to import Facebook political ads. The following content in this section highlights the unique features of our scipts in handling the large volume of data compared with the official R package `Radlibrary`.
 
@@ -44,7 +49,7 @@ As far as we know, the biggest functional difference between our scripts and the
 
 Our scripts also implement an additional feature related to data management: exclusion of duplicate records at the time when the data is inserted into the database. This is done to save disk space.
 
-If you are not interested in the background covering the authorization and the data, please proceed to the [Setup](#Setup) section at the end of this document.
+If you are not interested in the background covering the authorization and the data, please proceed to the [Setup](#setup) section at the end of this document.
 
 ### Access authorization
 
@@ -52,7 +57,7 @@ The API requires that each query must include an access token. This token is obt
 
 In order to be eligible to run the API, Facebook requires that a user must validate their identity. This involves validating the physical address in the United States (it used to be that Facebook would send a physical letter to the address) and validating the identity, which requires submitting a personal ID (for instance, a state-issued driver's license). After that the user must register as a developer on the platform and create an app.
 
-The scripts import the token from a file named `tokens.txt`, but we are not providing the file in this repository. The token is also used in the FB ad scraper: https://github.com/Wesleyan-Media-Project/fb_ad_scraper
+The scripts import the token from a file named `tokens.txt`, but we are not providing the file in this repository. The token is also used in the FB ad scraper: <https://github.com/Wesleyan-Media-Project/fb_ad_scraper>
 
 ### Keyword search and backpull
 
@@ -79,7 +84,7 @@ The scripts write columns `keyword` and `person` into the table. For the keyword
 
 ### API utilization and request slowdown
 
-Requests to the API are subject to rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: https://developers.facebook.com/docs/graph-api/overview/rate-limiting/
+Requests to the API are subject to rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: <https://developers.facebook.com/docs/graph-api/overview/rate-limiting/>
 
 Below is an example of the utilization record. This record is included into the header of the request returned by the server. The name of the header field is `X-Business-Use-Case-Usage`. The BUC number of the app has been replaced with `xxxx`.
 
@@ -143,7 +148,7 @@ Both scripts are launched daily. We leave several idle hours to "cool off" the u
 
 We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
 
-## Objective
+## 2. Objective
 
 Each of our repos belongs to one or more of the following categories:
 
@@ -154,7 +159,7 @@ Each of our repos belongs to one or more of the following categories:
 
 This repo is part of the Data Collection step.
 
-## Data
+## 3. Data
 
 The data gathered by the scripts is stored in a MySQL database.
 The script expects you to have a database named `dbase1` and a table named `race2022` in it. The table `race2022` is created by the script `table_setup.sql` in this repo. column names in table `race2022` reflect the ad record fields as they are available in the API version 17.0 (the documentation is [here](https://developers.facebook.com/docs/graph-api/reference/archived-ad/)). For more information on the database and tables, please see the [SQL backend](#sql-backend) section below.
@@ -163,7 +168,7 @@ The script expects you to have a database named `dbase1` and a table named `race
 
 We believe that the data collected by the scripts can be used as a basis for political ads research. It has the potential to be used in research, database creation, monitoring, and other applications.
 
-## Setup
+## 4. Setup
 
 ### Access Token
 
@@ -229,3 +234,35 @@ nohup R CMD BATCH --no-save --no-restore '--args resume=1' race2022.R  ./Logs/ra
 ```{bash}
 nohup R CMD BATCH --no-save --no-restore backpull2022.R  ./Logs/backpull_log_$(date +%Y-%m-%d).txt &
 ```
+
+## 5. Thank You
+
+<p align="center"><strong>We would like to thank our financial supporters!</strong></p><br>
+
+<p align="center">This material is based upon work supported by the National Science Foundation under Grant Numbers 2235006, 2235007, and 2235008.</p>
+
+<p align="center" style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=2235006">
+    <img class="img-fluid" src="nsf.png" height="150px" alt="National Science Foundation Logo">
+  </a>
+</p>
+
+<p align="center">The Cross-Platform Election Advertising Transparency Initiative (CREATIVE) is a joint infrastructure project of the Wesleyan Media Project and privacy-tech-lab at Wesleyan University in Connecticut.
+
+<p align="center" style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://www.creativewmp.com/">
+    <img class="img-fluid" src="CREATIVE_logo.png"  width="220px" alt="CREATIVE Logo">
+  </a>
+</p>
+
+<p align="center" style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://mediaproject.wesleyan.edu/">
+    <img src="wmp-logo.png" width="218px" height="100px" alt="Wesleyan Media Project logo">
+  </a>
+</p>
+
+<p align="center" style="display: flex; justify-content: center; align-items: center;">
+  <a href="https://privacytechlab.org/" style="margin-right: 20px;">
+    <img src="./plt_logo.png" width="200px" alt="privacy-tech-lab logo">
+  </a>
+</p>
