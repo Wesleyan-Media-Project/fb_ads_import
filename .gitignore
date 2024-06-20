@@ -54,3 +54,17 @@ rsconnect/
 
 #API keys
 tokens.txt
+
+#vscode 
+.vscode
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.env.local
+.env.*.local
