@@ -51,9 +51,9 @@ If you are not interested in the background covering the authorization and the d
 
 ### Access authorization
 
-The API requires that each query must include an access token. This token is obtained from the Facebook Graph API Explorer page [https://developers.facebook.com/tools/explorer/](https://developers.facebook.com/tools/explorer/). Initially, tokens are valid for 60 minutes, but they can be extended using a Token Debugger. An extended-life token can be used for 60 days.
+The API requires that each query must include an access token. This token is obtained from the Facebook Graph API Explorer page [https://developers.facebook.com/tools/explorer/](https://developers.facebook.com/tools/explorer/). Initially, tokens are valid for 60 minutes, but they can be extended using a Token Debugger. An extended-life token can be used for 60 days. If you want to run the scripts in this repo, it is essential to obtain a extended token. Without extending the token, the script will stop collecting data after 60 minutes since the token would expire and the API would reject the calls. However, since our keyword search script takes about 2 hours to complete. The script would break without the extended token, resulting in only partial data collection.
 
-In order to be eligible to run the API, Facebook requires that a user must validate their identity. This involves validating the physical address in the United States (it used to be that Facebook would send a physical letter to the address) and validating the identity, which requires submitting a personal ID (for instance, a state-issued driver's license). After that the user must register as a developer on the platform and create an app.
+In order to be eligible to run the API, Facebook requires that a user must validate their identity and that is a rigorous process. It is equivalent to being approved to run political ads on Facebook. The process involves validating the physical address in the United States (it used to be that Facebook would send a physical letter to the address) and validating the identity, which requires submitting a personal ID (for instance, a state-issued driver's license). After that the user must register as a developer on the platform and create an app. If you want to use our script to replicate the ads collection, you must also go through this process to obtain the access token.
 
 The scripts import the token from a file named `tokens.txt`, but we are not providing the file in this repository. The token is also used in the FB ad scraper: <https://github.com/Wesleyan-Media-Project/fb_ad_scraper>
 
@@ -82,7 +82,7 @@ The scripts write columns `keyword` and `person` into the table. For the keyword
 
 ### API utilization and request slowdown
 
-Requests to the API are subject to rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: <https://developers.facebook.com/docs/graph-api/overview/rate-limiting/>.
+Requests to the API are subject to rate limits. The app owned by the Wesleyan Media Project has been categorized as a "business use case" (BUC) and is subject to the BUC limits described on this page: <https://developers.facebook.com/docs/graph-api/overview/rate-limiting/>. The rate limits may be different for other types of users, you can check the unitilization record described below to see the keep track of your utilization record.
 
 Below is an example of the utilization record. This record is included into the header of the request returned by the server. The name of the header field is `X-Business-Use-Case-Usage`. The BUC number of the app has been replaced with `xxxx`.
 
@@ -144,7 +144,7 @@ The `backpull2022.R` script is designed to operate only a few hours a day. It is
 
 Both scripts are launched daily. We leave several idle hours to "cool off" the utilization metrics. The keyword-search script is launched at 8 am and runs first, until completion. Then, the backpull script is launched afterwards and runs until 3 am. The period between 3 am and 8 am is the "quiet time". We do know from experience that it is counter-productive to have the two scripts run in parallel because they consume the same rate limits.
 
-We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts.
+We have included the bash file `race_2022.sh` that is launched via crontab to run the scripts. We recommand that you use the same approach to run the ads collection. In this way, data will be collected on a daily basis without involvement from a user. You can also use RStudio to execute the ads collection scripts, but RStudio does not support scheduled invocations. A user would have to launch the script manually every day and that can be tedious, or impossible.
 
 ## 2. Data
 
